@@ -1,4 +1,4 @@
-# GitHub 使用 Skill
+# GitHub 使用 Skill：小白0门槛直接上手github项目发布与贡献！
 
 > 让 Agent 帮你把项目发布到 GitHub，而不会把提交记到别人名下。
 
