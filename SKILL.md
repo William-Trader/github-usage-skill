@@ -30,6 +30,32 @@ git config --global user.email "331161833+William-Trader@users.noreply.github.co
 
 完成标准：`git config --global --get user.email` 输出 `331161833+William-Trader@users.noreply.github.com`。
 
+## 0.2 发布前询问（强制，先问再做）
+
+发布是不可逆的公开动作。**没有问清楚之前，不建仓库、不推送。**
+
+一次问完三项，每项给推荐值：
+
+| # | 必问 | 选项 | 推荐 |
+|---|---|---|---|
+| 1 | 可见性与授权 | 公开 + MIT / 公开 + Apache-2.0 / 公开 + PolyForm 非商业 / 私有 | 工具类选公开 + MIT；有商业价值选 PolyForm 非商业 |
+| 2 | 脱敏范围 | 全仓扫描并清理 / 只扫工作区 / 不脱敏 | 全仓扫描（含历史提交、README、release 正文） |
+| 3 | 发布内容 | 只发源码 / 源码 + release 产物 / 源码 + 示例数据 | 只发源码；产物走 release |
+
+先跑扫描，把命中项逐条给用户看：
+
+```bash
+bash scripts/preflight-scan.sh .
+```
+
+- 凭据、公网 IP、绝对路径、真实身份、敏感文件，逐类确认
+- 历史提交里的密钥必须**轮换**，清理历史不能替代轮换
+- LICENSE 选择与脱敏清单见 `references/pre-publish-interview.md`
+
+用户说「你看着办」时用最保守组合：私有 + 无 LICENSE + 全量脱敏，并明确告知，等确认后再转公开。
+
+完成标准：三项都有明确答复，扫描命中项已处理，用户说「可以发布」。
+
 ## 0.5 不熟 GitHub 就先读基础常识
 
 仓库每个页面、分支/Issue/PR/Projects/Discussions/Actions 分别做什么，见 `references/github-basics.md`。给新手解释时先讲清 `main` 分支、Issue 与 PR 的区别，再动手。
@@ -159,6 +185,8 @@ gh pr create --title "fix: ..." --body "问题、原因、验证方式"
 
 ## 资源
 
+- `references/pre-publish-interview.md`：发布前必问项、许可证选择、脱敏清单与确认单
+- `scripts/preflight-scan.sh`：发布前脱敏扫描（凭据/IP/路径/身份/敏感文件）
 - `references/agent-field-notes.md`：高效批处理、真实事故复盘、命令速查、推送前检查表
 - `references/github-basics.md`：仓库、分支、Issue、PR、Projects、Discussions、Actions、权限与社区常识
 - `references/identity-and-auth.md`：身份矩阵、noreply 邮箱规则、认证排错

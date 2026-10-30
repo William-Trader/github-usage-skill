@@ -74,6 +74,7 @@ OpenClaw 会读取 `SKILL.md` 的 `description` 自动匹配，不需要额外�
 
 | 你的需求 | 直接看 |
 |---|---|
+| 发布前要不要脱敏 / license 怎么选 | `references/pre-publish-interview.md` |
 | GitHub 各页面/概念看不懂 | `references/github-basics.md` |
 | 第一次发布项目 | `references/beginner-path.md` |
 | 提交没算到我的贡献 | `scripts/audit-authorship.sh` → `scripts/fix-authorship.sh` |
@@ -94,6 +95,7 @@ github-usage-skill/
 ├── README.md                     # 人看的入口
 ├── references/
 │   ├── github-basics.md          # 仓库/分支/Issue/PR/Projects/社区常识
+│   ├── pre-publish-interview.md  # 发布前必问项、许可证、脱敏清单
 │   ├── agent-field-notes.md      # 高效批处理、事故复盘、命令速查
 │   ├── identity-and-auth.md      # 身份矩阵、noreply 规则、认证排错
 │   ├── repo-lifecycle.md         # 建仓、分支、保护、协作者、归档
@@ -101,6 +103,7 @@ github-usage-skill/
 │   ├── troubleshooting.md        # 错配、截断、拒绝推送、历史恢复
 │   └── beginner-path.md          # 0 基础第一次发布
 └── scripts/
+    ├── preflight-scan.sh         # 发布前脱敏扫描
     ├── audit-authorship.sh       # 批量扫描不可归属邮箱
     ├── fix-authorship.sh         # 重写 + 提交数校验 + 安全强推
     └── verify-remote-authors.sh  # 按 GitHub 账号逐仓核对
@@ -122,6 +125,26 @@ github-usage-skill/
 | 社区怎么参与 | fork → 分支 → 提交 → PR；先看 CONTRIBUTING 与 good first issue |
 
 完整版：[`references/github-basics.md`](references/github-basics.md)
+
+## 发布前先问三件事
+
+**不会替用户默认公开。** Agent 必须先问、先扫、再发布：
+
+1. **可见性与授权**：公开 + MIT / 公开 + Apache-2.0 / 公开 + PolyForm 非商业 / 私有
+2. **脱敏范围**：全仓扫描并清理 / 只扫工作区 / 不脱敏（默认全仓，含历史提交）
+3. **发布内容**：只发源码 / 源码 + release 产物 / 源码 + 示例数据（默认只发源码）
+
+然后运行扫描，把命中项逐条给用户看：
+
+```bash
+bash scripts/preflight-scan.sh .
+```
+
+检查类别：密钥/Token、公网 IP 与内网域名、本机绝对路径、真实邮箱与手机号、`.env`/私钥/数据库文件。
+历史提交里的密钥必须**轮换**，清理历史不能替代轮换。
+
+许可证怎么选、脱敏清单、发布确认单：见 [`references/pre-publish-interview.md`](references/pre-publish-interview.md)。
+用户说「你看着办」时用最保守组合：私有 + 无 LICENSE + 全量脱敏。
 
 ## Agent 实战笔记
 
