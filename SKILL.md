@@ -121,6 +121,11 @@ bash scripts/fix-authorship.sh /path/to/repo "william@users.noreply.github.com,w
 5. 用 `--force-with-lease` 推送每个受影响分支与 tag
 6. `gh api` 校验 `author.login` 全部等于本人
 
+- `filter-branch --env-filter` 在 POSIX sh 下执行，写 `${email,,}` 这类 bash 小写展开会报错并让整次重写静默失效；用 `$(printf %s "$GIT_AUTHOR_EMAIL" | tr "[:upper:]" "[:lower:]")` 再做 `case` 匹配，重写完先 grep 坏邮箱计数确认真的变了。
+- `filter-branch --all` 只重写本地 ref，`refs/remotes/origin/*` 只是被快照备份；本地分支比远端短时直接强推会用短历史覆盖远端。此时从 `git reflog show origin/<branch>` 取 `filter-branch: rewrite` 那条的 SHA，用 `git push --force origin <sha>:refs/heads/<branch>` 推重写后的远端 tip。
+- 每个仓库先比较 `git rev-list --count <branch>` 与 `git rev-list --count origin/<branch>`，本地更短就停下，先同步或改用远端分支再重写。
+- 工作区有未提交改动时先 stash 再动历史；恢复后不要 `git reset --hard`，从 stash commit 取回文件：`git checkout <stash-sha> -- <file>`。
+
 禁止：不看本地/远端提交数就 `--force`；`git reset --hard` 前不 stash；把第三方 fork 的上游提交一起重写。
 
 完成标准：`bash scripts/verify-remote-authors.sh <owner>` 输出全部 `bad=0`。
@@ -138,7 +143,13 @@ gh pr create --title "fix: ..." --body "问题、原因、验证方式"
 - 不重写上游历史，不 force push 别人的分支。
 - 一个 PR 只解决一个问题；附带复现步骤与验证结果。
 
-## 7. 交付前检查
+## 7. 高效操作与事故复盘
+
+批量审计、脚本化修复、以及本机真实踩过的坑（历史截断、未提交修改丢失、filter-branch 静默失效）都记在 `references/agent-field-notes.md`。做多仓库操作前先读它，能省掉整轮返工。
+
+完成标准：能复述「本地分支短于远端时禁止强推」与「重写后必须比对提交数」两条硬规则。
+
+## 8. 交付前检查
 
 - `gh api repos/<owner>/<repo>/commits --paginate --jq '[.[] | select(.author.login != "<owner>" and (.author.login // "" | endswith("[bot]") | not))] | length'` 为 0
 - 远端分支提交数 ≥ 本地（防止 force push 截断历史）
@@ -148,6 +159,7 @@ gh pr create --title "fix: ..." --body "问题、原因、验证方式"
 
 ## 资源
 
+- `references/agent-field-notes.md`：高效批处理、真实事故复盘、命令速查、推送前检查表
 - `references/github-basics.md`：仓库、分支、Issue、PR、Projects、Discussions、Actions、权限与社区常识
 - `references/identity-and-auth.md`：身份矩阵、noreply 邮箱规则、认证排错
 - `references/repo-lifecycle.md`：建仓、分支、保护、协作者、迁移
