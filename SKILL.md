@@ -30,6 +30,12 @@ git config --global user.email "331161833+William-Trader@users.noreply.github.co
 
 完成标准：`git config --global --get user.email` 输出 `331161833+William-Trader@users.noreply.github.com`。
 
+## 0.5 不熟 GitHub 就先读基础常识
+
+仓库每个页面、分支/Issue/PR/Projects/Discussions/Actions 分别做什么，见 `references/github-basics.md`。给新手解释时先讲清 `main` 分支、Issue 与 PR 的区别，再动手。
+
+完成标准：能用自己的话说清 clone / fork / star / watch 的区别。
+
 ## 1. 认证与权限
 
 ```bash
@@ -142,6 +148,7 @@ gh pr create --title "fix: ..." --body "问题、原因、验证方式"
 
 ## 资源
 
+- `references/github-basics.md`：仓库、分支、Issue、PR、Projects、Discussions、Actions、权限与社区常识
 - `references/identity-and-auth.md`：身份矩阵、noreply 邮箱规则、认证排错
 - `references/repo-lifecycle.md`：建仓、分支、保护、协作者、迁移
 - `references/releases-and-packaging.md`：版本号、tag、release、各语言打包

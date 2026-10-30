@@ -74,6 +74,7 @@ OpenClaw 会读取 `SKILL.md` 的 `description` 自动匹配，不需要额外�
 
 | 你的需求 | 直接看 |
 |---|---|
+| GitHub 各页面/概念看不懂 | `references/github-basics.md` |
 | 第一次发布项目 | `references/beginner-path.md` |
 | 提交没算到我的贡献 | `scripts/audit-authorship.sh` → `scripts/fix-authorship.sh` |
 | 强推后历史变短 | `references/troubleshooting.md` 第 2 节 |
@@ -91,6 +92,7 @@ github-usage-skill/
 ├── SKILL.md                      # Agent 主流程（命令 + 完成标准）
 ├── README.md                     # 人看的入口
 ├── references/
+│   ├── github-basics.md          # 仓库/分支/Issue/PR/Projects/社区常识
 │   ├── identity-and-auth.md      # 身份矩阵、noreply 规则、认证排错
 │   ├── repo-lifecycle.md         # 建仓、分支、保护、协作者、归档
 │   ├── releases-and-packaging.md # 版本号、tag、release、各语言打包
@@ -103,6 +105,21 @@ github-usage-skill/
 ```
 
 ---
+
+## GitHub 基础常识（新手先读）
+
+| 你可能在问 | 一句话答案 |
+|---|---|
+| 仓库是什么 | 代码 + 历史 + Issue/PR/Actions/Projects 的协作载体 |
+| branch 是什么 | 指向提交线的可移动指针，`main` 是主线，任务用短分支 |
+| Issue 和 PR 区别 | Issue 是待办/bug；PR 是改好代码请求合并 |
+| Projects 是什么 | 挂在仓库上的计划视图（表格/看板/路线图），数据来自 Issue 与 PR |
+| Discussions 是什么 | 开放讨论区，问答/想法/公告，可标答案 |
+| star / fork / watch | 收藏表态 / 复制仓库 / 订阅通知 |
+| Actions 是什么 | CI/CD，自动跑测试、构建、发版 |
+| 社区怎么参与 | fork → 分支 → 提交 → PR；先看 CONTRIBUTING 与 good first issue |
+
+完整版：[`references/github-basics.md`](references/github-basics.md)
 
 ## 真实案例
 
