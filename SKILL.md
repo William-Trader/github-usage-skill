@@ -67,6 +67,7 @@ bash scripts/preflight-scan.sh .
 先体检，再发布，最后发版：
 
 ```bash
+gh auth login --web                            # 首次：浏览器弹窗，粘贴一次性码
 bash scripts/doctor.sh .                       # 环境与仓库体检
 bash scripts/quickstart.sh                     # 身份→初始化→脱敏→建仓→推送→校验
 bash scripts/publish.sh --tag v0.1.0 --notes CHANGELOG.md

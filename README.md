@@ -24,6 +24,7 @@
 ## 3 分钟从零发布（0 基础）
 
 ```bash
+gh auth login --web               # 第一次：浏览器弹窗，粘贴一次性验证码
 cd 你的项目
 bash scripts/doctor.sh .          # 体检：环境/身份/敏感文件
 bash scripts/quickstart.sh        # 一键：身份→初始化→脱敏→建仓→推送→校验
@@ -36,8 +37,8 @@ bash scripts/publish.sh --tag v0.1.0 --notes CHANGELOG.md   # 发第一个版本
 不想用脚本？手动三步：
 
 ```bash
-git config --global user.email "<数字ID>+<用户名>@users.noreply.github.com"
 gh auth login --web
+git config --global user.email "<数字ID>+<用户名>@users.noreply.github.com"
 gh repo create <你>/<项目名> --public --source . --remote origin --push
 ```
 

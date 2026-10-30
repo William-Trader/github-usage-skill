@@ -25,6 +25,19 @@ gh release create v1.2.3 ./dist/app.zip \
 - release notes 写「变化 / 修复 / 破坏性变更 / 升级方法」。
 - 产物上传到 release，不提交进 git 历史。
 
+## 2.1 许可证正文
+
+用 GitHub 官方文本，不要手抄：
+
+```bash
+gh api /licenses/mit --jq .body > LICENSE
+gh api /licenses/apache-2.0 --jq .body > LICENSE
+```
+
+- 可用 key：`mit`、`apache-2.0`、`gpl-3.0`、`bsd-3-clause`、`mpl-2.0`
+- PolyForm 非商业不在列表里，从 polyformproject.org 复制全文
+- 写完 LICENSE 在同一提交里同步 README 的 License 段
+
 ## 3. 各类型项目怎么打包
 
 ### Node / 零依赖服务
