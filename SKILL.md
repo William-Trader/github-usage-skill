@@ -62,6 +62,22 @@ bash scripts/preflight-scan.sh .
 
 完成标准：能用自己的话说清 clone / fork / star / watch 的区别。
 
+## 0.9 一键路径（0 基础推荐）
+
+先体检，再发布，最后发版：
+
+```bash
+bash scripts/doctor.sh .                       # 环境与仓库体检
+bash scripts/quickstart.sh                     # 身份→初始化→脱敏→建仓→推送→校验
+bash scripts/publish.sh --tag v0.1.0 --notes CHANGELOG.md
+```
+
+- `quickstart.sh` 会交互确认仓库名、可见性、许可证；`--dry-run` 只看计划，`--yes` 全默认非交互。
+- `publish.sh` 会在有未提交改动、tag 格式不对、本地短于远端时直接中止。
+- 模板在 `templates/`（README / CHANGELOG / CONTRIBUTING / PR / Issue / .gitignore），脚本会自动取用。
+
+完成标准：`quickstart` 输出「OK：提交已归属到你」，`publish` 输出 release URL 与 assets 数量。
+
 ## 1. 认证与权限
 
 ```bash
@@ -151,6 +167,8 @@ bash scripts/fix-authorship.sh /path/to/repo "william@users.noreply.github.com,w
 - `filter-branch --all` 只重写本地 ref，`refs/remotes/origin/*` 只是被快照备份；本地分支比远端短时直接强推会用短历史覆盖远端。此时从 `git reflog show origin/<branch>` 取 `filter-branch: rewrite` 那条的 SHA，用 `git push --force origin <sha>:refs/heads/<branch>` 推重写后的远端 tip。
 - 每个仓库先比较 `git rev-list --count <branch>` 与 `git rev-list --count origin/<branch>`，本地更短就停下，先同步或改用远端分支再重写。
 - 工作区有未提交改动时先 stash 再动历史；恢复后不要 `git reset --hard`，从 stash commit 取回文件：`git checkout <stash-sha> -- <file>`。
+- 只按 GitHub API 的 `author.login` 判定是否需要重写；网页端编辑产生的提交可能用账号主邮箱或显示名（例如 `William <qq邮箱>`），只要 `login` 是本人就别为了统一邮箱再改历史。
+- 用户会直接在 GitHub 网页改 README，从而产生远端新提交；推送前先 `git fetch`，被拒时 `git rebase origin/main` 合并，不要用强推覆盖用户的网页修改。
 
 禁止：不看本地/远端提交数就 `--force`；`git reset --hard` 前不 stash；把第三方 fork 的上游提交一起重写。
 
@@ -185,6 +203,11 @@ gh pr create --title "fix: ..." --body "问题、原因、验证方式"
 
 ## 资源
 
+- `references/faq.md`：27 个新手高频问题
+- `scripts/doctor.sh`：环境/身份/仓库/敏感文件体检
+- `scripts/quickstart.sh`：0 基础一键发布
+- `scripts/publish.sh`：一键打 tag + release + 上传产物
+- `templates/`：README、CHANGELOG、CONTRIBUTING、PR、Issue、.gitignore 模板
 - `references/pre-publish-interview.md`：发布前必问项、许可证选择、脱敏清单与确认单
 - `scripts/preflight-scan.sh`：发布前脱敏扫描（凭据/IP/路径/身份/敏感文件）
 - `references/agent-field-notes.md`：高效批处理、真实事故复盘、命令速查、推送前检查表

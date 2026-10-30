@@ -21,28 +21,44 @@
 
 ---
 
-## 30 秒开始（人类）
+## 3 分钟从零发布（0 基础）
 
 ```bash
-# 1. 固定身份
-git config --global user.name "你的用户名"
-git config --global user.email "你的数字ID+用户名@users.noreply.github.com"
-
-# 2. 登录
-gh auth login --web
-
-# 3. 发布
-cd 你的项目 && git init -b main && git add -A && git commit -m "feat: 初始提交"
-gh repo create <你的用户名>/<项目名> --public --source . --remote origin --push
+cd 你的项目
+bash scripts/doctor.sh .          # 体检：环境/身份/敏感文件
+bash scripts/quickstart.sh        # 一键：身份→初始化→脱敏→建仓→推送→校验
+bash scripts/publish.sh --tag v0.1.0 --notes CHANGELOG.md   # 发第一个版本
 ```
 
-数字 ID 查询：`curl -s https://api.github.com/users/<用户名> | grep '"id"'`
+`quickstart.sh` 会问你四件事（都有默认值，回车即可）：仓库名、描述、公开/私有、许可证。
+看到 `OK：提交已归属到你` 即发布成功。
 
-完整零基础路径见 [`references/beginner-path.md`](references/beginner-path.md)。
+不想用脚本？手动三步：
 
----
+```bash
+git config --global user.email "<数字ID>+<用户名>@users.noreply.github.com"
+gh auth login --web
+gh repo create <你>/<项目名> --public --source . --remote origin --push
+```
 
-## Agent 怎么用
+完整零基础路径见 [`references/beginner-path.md`](references/beginner-path.md)，卡住看 [`references/faq.md`](references/faq.md)。
+
+## 能力矩阵（发布全流程）
+
+| 环节 | 辅助 | 硬保护 |
+|---|---|---|
+| 环境体检 | `scripts/doctor.sh` | 身份邮箱不对标 FAIL；本地短于远端标 FAIL |
+| 一键发布 | `scripts/quickstart.sh` | 未登录/未确认脱敏直接中止 |
+| 许可证 | `gh api /licenses/*` 自动写入 | 无 LICENSE 时提示「默认保留所有权利」 |
+| 脱敏 | `scripts/preflight-scan.sh` | 命中项需逐条确认；`--yes` 模式遇命中即停 |
+| 发版 | `scripts/publish.sh` | tag 格式、脏工作区、提交数不足都会中止 |
+| 产物 | release assets + 校验和 | 大文件不进 git 历史 |
+| 归属修复 | `scripts/fix-authorship.sh` | 重写后提交数不一致即停，不推送 |
+| 交付校验 | `scripts/verify-remote-authors.sh` | 按 `author.login` 判定，不看名字 |
+| 社区贡献 | fork → 分支 → PR 流程 | 不重写上游历史 |
+| 新手答疑 | `references/faq.md`（27 问） | — |
+
+## Agent 怎么用## Agent 怎么用
 
 ### 安装
 
@@ -95,6 +111,7 @@ github-usage-skill/
 ├── README.md                     # 人看的入口
 ├── references/
 │   ├── github-basics.md          # 仓库/分支/Issue/PR/Projects/社区常识
+│   ├── faq.md                    # 27 个新手高频问题
 │   ├── pre-publish-interview.md  # 发布前必问项、许可证、脱敏清单
 │   ├── agent-field-notes.md      # 高效批处理、事故复盘、命令速查
 │   ├── identity-and-auth.md      # 身份矩阵、noreply 规则、认证排错
@@ -102,7 +119,11 @@ github-usage-skill/
 │   ├── releases-and-packaging.md # 版本号、tag、release、各语言打包
 │   ├── troubleshooting.md        # 错配、截断、拒绝推送、历史恢复
 │   └── beginner-path.md          # 0 基础第一次发布
+├── templates/                    # README / CHANGELOG / CONTRIBUTING / PR / Issue / .gitignore
 └── scripts/
+    ├── doctor.sh                 # 环境与仓库体检
+    ├── quickstart.sh             # 0 基础一键发布
+    ├── publish.sh                # 一键 tag + release
     ├── preflight-scan.sh         # 发布前脱敏扫描
     ├── audit-authorship.sh       # 批量扫描不可归属邮箱
     ├── fix-authorship.sh         # 重写 + 提交数校验 + 安全强推
