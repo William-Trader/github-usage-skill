@@ -28,9 +28,24 @@ ask(){ # ask <prompt> <default>
   printf '%s' "${v:-$2}"
 }
 
-command -v git >/dev/null || { echo "缺少 git"; exit 1; }
-command -v gh >/dev/null || { echo "缺少 gh：brew install gh 或 winget install GitHub.cli"; exit 1; }
-gh auth status >/dev/null 2>&1 || { echo "未登录：先运行 gh auth login --web"; exit 1; }
+command -v git >/dev/null || { echo "缺少 git：macOS 用 brew install git，Windows 用 winget install Git.Git"; exit 1; }
+command -v gh >/dev/null || { echo "缺少 gh：macOS 用 brew install gh，Windows 用 winget install GitHub.cli"; exit 1; }
+
+# 第一步：浏览器弹窗登录（0 基础从这里开始）
+if ! gh auth status >/dev/null 2>&1; then
+  echo "第一步：GitHub 登录"
+  echo "接下来会显示一个一次性验证码，并提示按回车打开浏览器；在浏览器里粘贴代码并授权即可。"
+  if [ "$YES" -eq 1 ]; then
+    gh auth login --hostname github.com --git-protocol https --web || { echo "登录未完成，重新运行脚本即可"; exit 1; }
+  else
+    read -r -p "现在开始登录？[Y/n]: " a || true
+    case "${a:-y}" in
+      y|Y|"") gh auth login --hostname github.com --git-protocol https --web || { echo "登录未完成，重新运行脚本即可"; exit 1; };;
+      *) echo "已取消：没有登录无法建仓。"; exit 1;;
+    esac
+  fi
+fi
+if ! gh auth status >/dev/null 2>&1; then echo "仍未登录，退出"; exit 1; fi
 
 LOGIN=$(gh api user --jq .login)
 UID_NUM=$(gh api user --jq .id)

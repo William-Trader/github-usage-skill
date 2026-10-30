@@ -5,12 +5,18 @@
 ## 路线 A：一键（推荐）
 
 ```bash
+# 第一次使用先登录：会弹出浏览器，粘贴一次性验证码并授权
+gh auth login --web
+
 cd 你的项目
 bash <skill目录>/scripts/quickstart.sh
 ```
 
+没登录就直接跑 `quickstart.sh` 也可以：它会先引导你完成浏览器登录，再继续后面的步骤。
+
 脚本会依次做：
 
+0. 未登录时先打开浏览器登录（一次性验证码）
 1. 检查 git / gh 是否安装、是否登录
 2. 把身份设成你的 `<数字ID>+<用户名>@users.noreply.github.com`
 3. 问仓库名、描述、可见性、许可证（都有默认值，直接回车）
@@ -35,12 +41,12 @@ bash <skill目录>/scripts/publish.sh --tag v0.1.0 --notes CHANGELOG.md
 ## 路线 B：手动
 
 ```bash
-# 1. 身份
+# 1. 登录（浏览器弹窗）
+gh auth login --web
+
+# 2. 身份
 git config --global user.name "你的用户名"
 git config --global user.email "你的数字ID+用户名@users.noreply.github.com"
-
-# 2. 登录
-gh auth login --web
 
 # 3. 发布
 cd 你的项目

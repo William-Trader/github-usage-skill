@@ -13,6 +13,8 @@
 - **已 checkout 的分支不能 `git branch -f`**：直接推 SHA，`git push --force origin <sha>:refs/heads/main`。
 - **批量补元数据**：`gh repo edit --add-topic a,b --description "..."`，比网页点快且可复现。
 - **修复提交单独提交**：身份重写与功能改动分成两个 PR/提交，回滚时不互相牵连。
+- **脚本先 `--dry-run`**：`quickstart.sh`、`publish.sh` 先跑 `--dry-run` 验证分支与目标，再对真实仓库执行；输出与预期不符就改脚本，不要直接上。
+- **扫描命中分真值/示例**：脱敏扫描会命中文档里的示例邮箱、IP、`/Users/<名字>/` 占位符；逐条判断，不要全局替换。
 
 ## 2. 真实事故复盘
 
