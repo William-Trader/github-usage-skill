@@ -82,6 +82,7 @@ OpenClaw 会读取 `SKILL.md` 的 `description` 自动匹配，不需要额外�
 | 403 / 推送被拒 / 密钥泄漏 | `references/troubleshooting.md` |
 | 给开源项目提 PR | `SKILL.md` 第 6 节 |
 | 多仓库统一身份 | `references/identity-and-auth.md` |
+| 批量修多个仓库 / 怕强推搞坏历史 | `references/agent-field-notes.md` |
 
 ---
 
@@ -93,6 +94,7 @@ github-usage-skill/
 ├── README.md                     # 人看的入口
 ├── references/
 │   ├── github-basics.md          # 仓库/分支/Issue/PR/Projects/社区常识
+│   ├── agent-field-notes.md      # 高效批处理、事故复盘、命令速查
 │   ├── identity-and-auth.md      # 身份矩阵、noreply 规则、认证排错
 │   ├── repo-lifecycle.md         # 建仓、分支、保护、协作者、归档
 │   ├── releases-and-packaging.md # 版本号、tag、release、各语言打包
@@ -120,6 +122,17 @@ github-usage-skill/
 | 社区怎么参与 | fork → 分支 → 提交 → PR；先看 CONTRIBUTING 与 good first issue |
 
 完整版：[`references/github-basics.md`](references/github-basics.md)
+
+## Agent 实战笔记
+
+把「一次做对」和「踩过的坑」单独成篇：[`references/agent-field-notes.md`](references/agent-field-notes.md)
+
+- 批量审计 → 逐仓闭环 → `gh api` 复核，不边扫边改
+- 本地分支比远端短时**禁止强推**（本次真把 60 条历史推成 2 条，随后从 reflog 恢复）
+- `filter-branch` 的 env-filter 是 POSIX sh，`${email,,}` 会让整次重写静默失效
+- `git log --all` 会包含 `refs/original` 备份，检查是否改干净要加 `--exclude`
+- `reset --hard` 前不 stash，就要靠 `git fsck` 找悬空 stash commit 捞文件
+- 环境坑：zsh 的 `?` 通配、macOS Python 的 SSL、`gh api --paginate` 的多段 JSON
 
 ## 真实案例
 
