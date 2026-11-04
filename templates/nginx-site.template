@@ -1,0 +1,26 @@
+# nginx 反向代理模板
+# 复制到 /etc/nginx/sites-available/<站点名>，改完后：
+#   sudo ln -s /etc/nginx/sites-available/<站点名> /etc/nginx/sites-enabled/
+#   sudo nginx -t && sudo systemctl reload nginx
+#
+# 前提：后端服务已在本机监听 127.0.0.1:<端口>
+
+server {
+    listen 80;
+    server_name _;
+
+    client_max_body_size 32m;
+
+    location / {
+        proxy_pass http://127.0.0.1:<端口>;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Connection "";
+        proxy_buffering off;
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+    }
+}

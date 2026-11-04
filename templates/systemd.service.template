@@ -1,0 +1,23 @@
+# systemd 服务模板
+# 复制到 /etc/systemd/system/<服务名>.service，替换 <...> 后执行：
+#   sudo systemctl daemon-reload && sudo systemctl enable --now <服务名>
+#   systemctl is-active <服务名>
+#   journalctl -u <服务名> -n 50 --no-pager
+
+[Unit]
+Description=<一句话说明这个服务是什么>
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=<运行用户，例如 root 或 ubuntu>
+WorkingDirectory=<代码目录，例如 /opt/apps/myapp>
+Environment=<键>=<值>
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=<绝对路径的解释器> <绝对路径的入口文件>
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
